@@ -99,12 +99,92 @@ def plot_distributions(signals, ax=None, quantiles=1000, title='', logscale=Fals
         ax.legend()
     utils.draw()
 
+def plot_fft(signals, ax=None, title='', logscale=False, force_equal_sizes=True):
+    if not isinstance(signals, dict): signals = {'signal': signals}
+    n = min([len(s) for s in signals.values()]) if force_equal_sizes else None
+    if ax is None:
+        fig, ax = plt.subplots()
+    if isinstance(ax, str) and ax == 'interactive':
+        ax = InteractiveFigure().get_axes()
+    if title: title += '\n'
+    if len(signals) == 1:
+        title += f'({len(list(signals.values())[0]):d} samples)'
+    else:
+        lengths = ', '.join([f'{len(signals[sig][:n]):d}' for sig in signals])
+        title += f'({lengths:s} samples respectively)'
+
+    for i, sig in enumerate(signals):
+        signal = signals[sig][:n]
+        f = np.fft.fft(signal)[1:]
+        if logscale:
+            f = np.log10(1 + np.abs(f)) * np.sign(f)
+        ax.plot(1+np.arange(len(f)), f, color=utils.DEF_COLORS[i],
+                linewidth=0.8, linestyle='-', label=sig)
+
+    ax.grid()
+    ax.set_xlabel('Frequency [1/dt]', fontsize=12)
+    ax.set_ylabel('Log-FFT [base 10]' if logscale else 'FFT', fontsize=12)
+    ax.set_title(title, fontsize=14)
+    if len(signals) > 1:
+        ax.legend()
+    utils.draw()
+
+def enrich_fixed_time(df, drop_open_row=True, show=False):
+    df['fixed_time'] = 0
+    dt = np.median(np.diff(-df.quaketime))
+    transitions = np.where(np.logical_or(
+        np.diff(-df.quaketime)>10*dt, np.diff(-df.quaketime)<-10*dt) )[0]
+    transitions = np.concatenate(([-1], transitions, [len(df)-1]))
+    # shift times
+    for ti,tf in zip(transitions[:-1],transitions[1:]):
+        last = df.quaketime[tf]
+        df.loc[ti+1:tf,'fixed_time'] = last + 250e-9*np.arange(tf-ti,0,-1)
+    # remove first entry of each block
+    if drop_open_row:
+        for ti in transitions[1:-1][::-1]:
+            df.drop(ti+1, axis=0, inplace=True)
+    if show:
+        ax = InteractiveFigure().get_axes()
+        ax.plot(df.quaketime, color='blue', label='original')
+        ax.plot(df.fixed_time, color='green', label='fixed (250 nano)')
+        ax.set_title('Time correction', fontsize=14)
+        ax.set_xlabel('Sample', fontsize=12)
+        ax.set_ylabel('Time to quake', fontsize=12)
+        ax.legend()
+        utils.draw()
+    return df
+
+def complete_time_grid(df, enriched=False, show=False):
+    if not enriched:
+        df = enrich_fixed_time(df, show=show)
+    dt = np.median(np.diff(-df.fixed_time))
+    df['ind'] = -np.round(df.fixed_time/ dt)
+    d_all = pd.DataFrame(
+        data={'ind':list(range(int(df['ind'].values[0]),
+                                 int(df['ind'].values[-1]+1)))}
+    )
+    d_all = d_all.merge(df, on='ind', how='outer')
+    if show:
+        ax = InteractiveFigure().get_axes()
+        ax.plot(d_all.signal)
+        print(d_all)
+        print(np.mean(np.isnan(d_all.signal)))
+        nans_starts = np.where(np.logical_and(np.logical_not(np.isnan(d_all.signal.values[:-1])),np.isnan(d_all.signal.values[1:])))[0]
+        nans_ends = np.where(np.logical_and(np.logical_not(np.isnan(d_all.signal.values[1:])),np.isnan(d_all.signal.values[:-1])))[0]
+        print(utils.dist(nans_ends-nans_starts))
+    return d_all
+
+def averaged_spectrum(fname='Data/train.csv', block_size=4096):
+    pass
+
+
 
 if __name__ == '__main__':
     # configuration
     demo = True
     signals = False
     distributions = False
+    FFTs = True
 
     # initialization
     if demo:
@@ -144,16 +224,27 @@ if __name__ == '__main__':
         print(f'Distributions plotted ({time()-t0:.0f} [s])')
 
     # plot FFTs
-    # TODO
+    if FFTs:
+        plot_fft({'long':df.signal,'short':df.signal.head(int(len(df)/10))}, ax='interactive',
+                 title='FFT of long vs. short (prefix of the long) signals', force_equal_sizes=False)
+        plot_fft({'train':df.signal,'test':dt.signal}, ax='interactive',
+                 title='FFT of train vs. test signals')
+        plot_fft({'train':df.signal,'test':dt.signal}, ax='interactive',
+                 title='FFT of train vs. test signals (log)', logscale=True)
+        print(f'FFTs plotted ({time()-t0:.0f} [s])')
+
+    # time correction
+    df = load_data(nrows=100000)
+    complete_time_grid(df, show=True)
 
     plt.show()
 
 
 # TODO:
 
+# V compare train & test ffts
 # compare fft plot of train segment with various methods:
 #    as raw; various interpolations; separated and then averaged
 # plot fft of the whole train data with/out chosen method
 # plot distribution of the strongest frequency
 #    over 4K blocks / 150K segments?
-# compare train & test ffts
