@@ -49,6 +49,10 @@ Until this issue is handled, only ~10% of the data are actually used (~100M/1B s
 |:--:|
 | Test set: 10 random segments (with adjacent indices) of 150K samples each |
 
+|![](https://github.com/ido90/Earthquakes/blob/master/Output/FFT/train_vs_test.png)|
+|:--:|
+| FFT of samples of train set vs. test set |
+
 ## Distributions
 Below are plotted the distributions of the complete train and test signals with both linear and log (with base 10) scales.
 The whole run required ~10 minutes.
@@ -66,33 +70,31 @@ The train signal is larger by 1 in median and by 0.4 in average.
 
 # Representation
 
+## Time issues
+The train set consists of samples which include time_to_quake entry.
+Adjacent times have typical gap of 1ns, even though the measurement device is supposed to have frequency of 1/250ns.
+In addition, there are larger gaps every ~4096 samples.
+
+It was speculated that the reported times are the times of the device logger every 4096 samples, and that the correct times are more uniformly spreaded over the large gaps.
+
+To fix that, the large gaps were detected, and the corresponding sequence of times was redefined with gaps of 250ns backwards from the last entry in the sequence.
+The remaining gaps are speculated to have 48 missing samples, and were filled up with nans as needed (more meaningful filling will be done next).
+
+The time correction seems to work not quite as expected.
+In particular, the remaining gaps after the time correction either don't exist or are too large (305 samples instead of 48).
+
+|![](https://github.com/ido90/Earthquakes/blob/master/Output/FFT/time_correction.png)|
+|:--:|
+| Corrected times and the corresponding signal |
+
 ## Fourier transform with missing points
 
-The general solution to missing data points in spectral analysis is apparently to *fill in the missing points using some interpolation*, e.g. linear, Gaussian filter, cubic spline.
+Since the corrected times have remaining gaps, and since frequencies of non-uniformly-sampled signals are poorly calculated by the discrete Fourier transform, a manipulation is required to allow valid use of any frequency-based feature.
 
-Gaussian filter seems more appropriate for general cases of non-uniform samples, where we want to change the whole sampling grid. For just some missing points I believe that *local interpolation (linear/spline) would be better*.
+(This repository](https://github.com/ido90/SignalReconstruction) describes several possiblities for such manipulations, and finds that linear interpolation of the missing points should be usually used as default.
 
-More advanced, barely mentioned solution may be some kind of Fourier interpolation.
-
-All references look quite consistent.
-The first one demonstrates the effects on the spectrum.
-The third one also suggests doing FFT for each clean interval separately, then averaging them.
-
-http://mres.uni-potsdam.de/index.php/2017/08/22/data-voids-and-spectral-analysis-dont-be-afraid-of-gaps/
-
-https://scicomp.stackexchange.com/questions/593/how-do-i-take-the-fft-of-unevenly-spaced-data
-
-https://dsp.stackexchange.com/questions/22930/spectral-analysis-of-a-time-series-with-missing-data-points
-
-
-Implementation of interpolation (of y vs. t):
-np.interp(full_t, partial_t, partial_y) # linear
-sp.interpolate.interp1d(partial_t, partial_y, kind=kind)(full_t) # kind in ‘slinear’, ‘quadratic’, ‘cubic’ yields a spline.
-df.interpolate() # method supports most of scipy's interp1d kinds.
-
-https://docs.scipy.org/doc/scipy/reference/generated/scipy.interpolate.interp1d.html
-
-https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.interpolate.html
+TODO
+relevant plots of Fourier transforms of the train set will be updated once the time correction is correctly done.
 
 # Features
 
