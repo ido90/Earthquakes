@@ -23,8 +23,44 @@ Research for Kaggle's challenge of earthquakes prediction.
 
 # Data
 
+It is quite a problem to load all the data naively using read_csv.
+Until this issue is handled, only ~10% of the data are actually used (~100M/1B samples).
 
-# Respresentation
+|![](https://github.com/ido90/Earthquakes/blob/master/Output/Signal%20description/train_100M_samples_low_resolution_interactive.png)|
+|:--:|
+| Train set: first 100M samples (~10%) with skips (only 1 row in a 1000 is shown) |
+
+|![](https://github.com/ido90/Earthquakes/blob/master/Output/Signal%20description/train_10M_samples_interactive.png)|
+|:--:|
+| Train set: first 10M samples (~1%) with no skips |
+
+|![](https://github.com/ido90/Earthquakes/blob/master/Output/Signal%20description/train_150K_samples_interactive.png)|
+|:--:|
+| Train set: a random segment of 150K samples |
+
+|![](https://github.com/ido90/Earthquakes/blob/master/Output/Signal%20description/train_150K_samples_interactive_zoom_calm.png)|
+|:--:|
+|![](https://github.com/ido90/Earthquakes/blob/master/Output/Signal%20description/train_150K_samples_interactive_zoom_calm.png)|
+| Train set: zoom in |
+| Note: it does not seem trivial whether or not there is discontinuity in the transition between the 4096-sized chunks. |
+
+|![](https://github.com/ido90/Earthquakes/blob/master/Output/Signal%20description/test_10_segments.png)|
+|:--:|
+| Test set: 10 random segments (with adjacent indices) of 150K samples each |
+
+Below are plotted the distributions of train and test signals with both linear and log (with base 10) scales.
+
+It looks like the orders of magnitudes are similar over most of the distributions, though the train signal has much larger outliers (possibly corresponding to large noises before the quakes).
+If this property lasts over the whole test set (rather than merely the 10 out of ~2500 segments used), then it probably means that such non-representative outliers in the train set should be removed.
+
+![](https://github.com/ido90/Earthquakes/blob/master/Output/Signal%20description/quantile_plots.png)
+![](https://github.com/ido90/Earthquakes/blob/master/Output/Signal%20description/quantile_plots_log.png)
+
+![](https://github.com/ido90/Earthquakes/blob/master/Output/Signal%20description/qqplot.png)
+![](https://github.com/ido90/Earthquakes/blob/master/Output/Signal%20description/qqplot_log.png)
+
+
+# Representation
 
 ## Fourier transform with missing points
 
