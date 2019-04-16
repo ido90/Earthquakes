@@ -49,6 +49,7 @@ Until this issue is handled, only ~10% of the data are actually used (~100M/1B s
 | Test set: 10 random segments (with adjacent indices) of 150K samples each |
 
 Below are plotted the distributions of the complete train and test signals with both linear and log (with base 10) scales.
+The whole run required ~10 minutes.
 
 It looks like the orders of magnitudes are similar over the distributions.
 Both distributions are within the range (-1)-(+9) for 80% of the time, yet reach +-6000 in their extremes (in which the test set reaches ~20% larger absolute values).
