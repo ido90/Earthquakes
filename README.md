@@ -23,6 +23,7 @@ Research for Kaggle's challenge of earthquakes prediction.
 
 # Data
 
+## Signals
 It is quite a problem to load all the data naively using read_csv.
 Until this issue is handled, only ~10% of the data are actually used (~100M/1B samples).
 
@@ -48,6 +49,7 @@ Until this issue is handled, only ~10% of the data are actually used (~100M/1B s
 |:--:|
 | Test set: 10 random segments (with adjacent indices) of 150K samples each |
 
+## Distributions
 Below are plotted the distributions of the complete train and test signals with both linear and log (with base 10) scales.
 The whole run required ~10 minutes.
 
