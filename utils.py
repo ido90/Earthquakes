@@ -252,6 +252,7 @@ def qqplot(x1, x2, names, ax=None, quantiles=1000, title='', logscale=False):
     for i in range(11):
         ax.annotate(f'{10*i:.0f}%', (dist1[2+i], dist2[2+i]),
                     horizontalalignment='right')
+    ax.grid()
     ax.set_xlabel(('Log-' if logscale else '')+names[0]+
                   f' ({counter_to_str(len(x1)):s} samples)', fontsize=12)
     ax.set_ylabel(('Log-' if logscale else '')+names[1]+

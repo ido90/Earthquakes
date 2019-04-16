@@ -91,6 +91,7 @@ def plot_distributions(signals, ax=None, quantiles=1000, title='', logscale=Fals
                 color=utils.DEF_COLORS[i], linestyle='-', label=sig)
 
     ax.set_xlim((0,100))
+    ax.grid()
     ax.set_xlabel('Quantile [%]', fontsize=12)
     ax.set_ylabel('Log-signal [base 10]' if logscale else 'Signal', fontsize=12)
     ax.set_title(title, fontsize=14)
@@ -100,16 +101,26 @@ def plot_distributions(signals, ax=None, quantiles=1000, title='', logscale=Fals
 
 
 if __name__ == '__main__':
-    # load data
-    N = 10e6 # 10e6, 1e9
+    # configuration
+    demo = True
+    signals = False
+    distributions = False
+
+    # initialization
+    if demo:
+        N, n_files, file0 = 1e6, 10, int(np.random.uniform(0,1000))
+    else:
+        N, n_files, file0 = None, 10000, 0
     t0 = time()
+
+    # load data
     df = load_data(nrows=N)
     print(f'Train data loaded ({time()-t0:.0f} [s])')
-    dt = load_multi_files(i0=int(np.random.uniform(0,1000)))
+    dt = load_multi_files(n_files=n_files, i0=file0)
     print(f'Test data loaded ({time()-t0:.0f} [s])')
 
     # plot signals
-    if False:
+    if signals:
         plot_data(df.head(int(10e6)), ax='interactive', title='Beginning of train')
         plot_data(df.iloc[[1000*i for i in range(int(min(1e5,len(df)/1e3)))],:],
                   ax='interactive', title='Beginning of train with skips (1:1000)')
@@ -118,18 +129,19 @@ if __name__ == '__main__':
                   title='Random segment in train')
         plot_data(dt, cols='signal', split_col='segment', ax='interactive',
                   title='Random adjacent segments in test')
-    print(f'Signals plotted ({time()-t0:.0f} [s])')
+        print(f'Signals plotted ({time()-t0:.0f} [s])')
 
     # plot distributions
-    # plot_distributions({'train':df.signal,'test':dt.signal}, ax='interactive',
-    #                    title='Sample of train vs. test signals')
-    plot_distributions({'train':df.signal,'test':dt.signal}, ax='interactive',
-                       title='Sample of train vs. test signals (log)', logscale=True)
-    # utils.qqplot(df.signal, dt.signal, ('train','test'), ax='interactive',
-    #        title='QQ-plot: train vs. test')
-    # utils.qqplot(df.signal, dt.signal, ('train','test'), ax='interactive',
-    #        title='QQ-plot: train vs. test (log)', logscale=True)
-    print(f'Distributions plotted ({time()-t0:.0f} [s])')
+    if distributions:
+        plot_distributions({'train':df.signal,'test':dt.signal}, ax='interactive',
+                           title='Sample of train vs. test signals')
+        plot_distributions({'train':df.signal,'test':dt.signal}, ax='interactive',
+                           title='Sample of train vs. test signals (log)', logscale=True)
+        utils.qqplot(df.signal, dt.signal, ('train','test'), ax='interactive',
+               title='QQ-plot: train vs. test')
+        utils.qqplot(df.signal, dt.signal, ('train','test'), ax='interactive',
+               title='QQ-plot: train vs. test (log)', logscale=True)
+        print(f'Distributions plotted ({time()-t0:.0f} [s])')
 
     # plot FFTs
     # TODO
