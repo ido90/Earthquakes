@@ -48,10 +48,11 @@ Until this issue is handled, only ~10% of the data are actually used (~100M/1B s
 |:--:|
 | Test set: 10 random segments (with adjacent indices) of 150K samples each |
 
-Below are plotted the distributions of train and test signals with both linear and log (with base 10) scales.
+Below are plotted the distributions of the complete train and test signals with both linear and log (with base 10) scales.
 
-It looks like the orders of magnitudes are similar over most of the distributions, though the train signal has much larger outliers (possibly corresponding to large noises before the quakes).
-If this property lasts over the whole test set (rather than merely the 10 out of ~2500 segments used), then it probably means that such non-representative outliers in the train set should be removed.
+It looks like the orders of magnitudes are similar over the distributions.
+Both distributions are within the range (-1)-(+9) for 80% of the time, yet reach +-6000 in their extremes (in which the test set reaches ~20% larger absolute values).
+The train signal is larger by 1 in median and by 0.4 in average.
 
 ![](https://github.com/ido90/Earthquakes/blob/master/Output/Signal%20description/quantile_plots.png)
 ![](https://github.com/ido90/Earthquakes/blob/master/Output/Signal%20description/quantile_plots_log.png)
