@@ -18,8 +18,10 @@ Research for Kaggle's challenge of earthquakes prediction.
 # Introduction
 
 ## The competition
+TODO
 
 ## This repo
+TODO
 
 # Data
 
@@ -83,18 +85,25 @@ The remaining gaps are speculated to have 48 missing samples, and were filled up
 The time correction seems to work not quite as expected.
 In particular, the remaining gaps after the time correction either don't exist or are too large (305 samples instead of 48).
 
+Since we don't seem to successfully build a coherent time-grid, we will avoid any interpolations that would have allow us to apply FFT on a full uniform grid (as demonstrated [here](https://github.com/ido90/SignalReconstruction)).
+Instead, we will just apply FFT separately to every block of 4096 samples.
+
 |![](https://github.com/ido90/Earthquakes/blob/master/Output/FFT/time_correction.png)|
 |:--:|
 | Corrected times and the corresponding signal |
 
-## Fourier transform with missing points
+## Averaged Fourier transform over blocks
 
-Since the corrected times have remaining gaps, and since frequencies of non-uniformly-sampled signals are poorly calculated by the discrete Fourier transform, a manipulation is required to allow valid use of any frequency-based feature.
+Since the data are given in sequences of 4096 uniform samples (up to few exceptions with 4095 sampels), the FFT can just be applied separately to each sequence, allowing to capture any frequency corresponding to period of 4096 samples or shorter.
 
-[This repository](https://github.com/ido90/SignalReconstruction) describes several possiblities for such manipulations, and finds that linear interpolation of the missing points should be usually used as default.
+|![](https://github.com/ido90/Earthquakes/blob/master/Output/FFT/train_averaged_fft.png)|
+|:--:|
+| An average of all the ~35 FFTs of length 4096 within a train segment of 150K smaples (up), and two arbitrary particular FFTs (down). |
 
-TODO
-relevant plots of Fourier transforms of the train set will be updated once the time correction is correctly done.
+|![](https://github.com/ido90/Earthquakes/blob/master/Output/FFT/train_blocks_fft_are_similar.png)|
+|:--:|
+| Distribution of the peaks of the various blocks FFTs: the peak is at a constant frequency somewhere between 200-300 samples (up to reflection of the Fourier transform), in amplitude that varies uniformly within 10-60. |
+
 
 # Features
 
