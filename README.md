@@ -91,7 +91,7 @@ In particular, the remaining gaps after the time correction either don't exist o
 
 Since the corrected times have remaining gaps, and since frequencies of non-uniformly-sampled signals are poorly calculated by the discrete Fourier transform, a manipulation is required to allow valid use of any frequency-based feature.
 
-(This repository](https://github.com/ido90/SignalReconstruction) describes several possiblities for such manipulations, and finds that linear interpolation of the missing points should be usually used as default.
+[This repository](https://github.com/ido90/SignalReconstruction) describes several possiblities for such manipulations, and finds that linear interpolation of the missing points should be usually used as default.
 
 TODO
 relevant plots of Fourier transforms of the train set will be updated once the time correction is correctly done.
