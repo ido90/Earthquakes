@@ -115,7 +115,7 @@ def plot_fft(signals, ax=None, title='', logscale=False, force_equal_sizes=True)
 
     for i, sig in enumerate(signals):
         signal = signals[sig][:n]
-        f = np.fft.fft(signal)[1:]
+        f = np.fft.fft(signal, norm='ortho')[1:]
         if logscale:
             f = np.log10(1 + np.abs(f)) * np.sign(f)
         ax.plot(1+np.arange(len(f)), f, color=utils.DEF_COLORS[i],
@@ -174,9 +174,41 @@ def complete_time_grid(df, enriched=False, show=False):
         print(utils.dist(nans_ends-nans_starts))
     return d_all
 
-def averaged_spectrum(fname='Data/train.csv', block_size=4096):
-    pass
-
+def averaged_spectrum(df):
+    # find transitions
+    dt = np.median(np.diff(-df.quaketime))
+    transitions = np.where(np.logical_or(
+        np.diff(-df.quaketime)>10*dt, np.diff(-df.quaketime)<-10*dt) )[0] + 1
+    transitions = np.concatenate(([0], transitions, [len(df)]))
+    print('Distribution of blocks lengths:')
+    print(utils.dist([tf-ti for ti,tf in zip(transitions[:-1],transitions[1:])]))
+    print(f'Valid blocks (4096 samples):\t' +
+          f'{np.sum(np.diff(transitions)==4096):.0f}/{len(transitions):d}')
+    # calculate ffts
+    ffts = []
+    for ti,tf in zip(transitions[:-1],transitions[1:]):
+        if tf-ti != 4096: continue
+        print(tf-ti)
+        f = np.fft.fft(df.signal[ti:tf], norm='ortho')[1:]
+        ffts.append(np.abs(f))
+    # plot averaged fft
+    avg_fft = np.mean(ffts, axis=0)
+    fig,axs = plt.subplots(3,1)
+    axs[0].plot(avg_fft, linewidth=0.8)
+    axs[0].set_ylabel('Averaged Fourier Over Blocks')
+    axs[1].plot(ffts[3], linewidth=0.8)
+    axs[1].set_ylabel('FFT: Block 3')
+    axs[2].plot(ffts[30], linewidth=0.8)
+    axs[2].set_ylabel('FFT: Block 30')
+    # plot distribution of [max(abs(f)) for f in ffts]
+    fig,axs = plt.subplots(2,1)
+    axs[0].plot(utils.dist([np.max(f) for f in ffts],np.arange(1001)/10)[2:])
+    axs[0].set_xlabel('Quantile [%]')
+    axs[0].set_ylabel('Max Fourier Amplitude in Block')
+    axs[1].plot(utils.dist([np.argmax(f) for f in ffts],np.arange(1001)/10)[2:])
+    axs[1].set_xlabel('Quantile [%]')
+    axs[1].set_ylabel('Frequency of Max Fourier Amplitude')
+    utils.draw()
 
 
 if __name__ == '__main__':
@@ -185,6 +217,7 @@ if __name__ == '__main__':
     signals = False
     distributions = False
     FFTs = True
+    time_interpolation = False
 
     # initialization
     if demo:
@@ -227,24 +260,14 @@ if __name__ == '__main__':
     if FFTs:
         plot_fft({'long':df.signal,'short':df.signal.head(int(len(df)/10))}, ax='interactive',
                  title='FFT of long vs. short (prefix of the long) signals', force_equal_sizes=False)
-        plot_fft({'train':df.signal,'test':dt.signal}, ax='interactive',
+        plot_fft({'train':df.signal,'test':dt.signal[:int(150e3)]}, ax='interactive',
                  title='FFT of train vs. test signals')
-        plot_fft({'train':df.signal,'test':dt.signal}, ax='interactive',
-                 title='FFT of train vs. test signals (log)', logscale=True)
+        averaged_spectrum(df[:int(150e3)])
         print(f'FFTs plotted ({time()-t0:.0f} [s])')
 
     # time correction
-    df = load_data(nrows=100000)
-    complete_time_grid(df, show=True)
+    if time_interpolation:
+        df_tmp = load_data(nrows=100000)
+        complete_time_grid(df_tmp, show=True)
 
     plt.show()
-
-
-# TODO:
-
-# V compare train & test ffts
-# compare fft plot of train segment with various methods:
-#    as raw; various interpolations; separated and then averaged
-# plot fft of the whole train data with/out chosen method
-# plot distribution of the strongest frequency
-#    over 4K blocks / 150K segments?
