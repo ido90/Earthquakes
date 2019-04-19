@@ -188,7 +188,6 @@ def averaged_spectrum(df):
     ffts = []
     for ti,tf in zip(transitions[:-1],transitions[1:]):
         if tf-ti != 4096: continue
-        print(tf-ti)
         f = np.fft.fft(df.signal[ti:tf], norm='ortho')[1:]
         ffts.append(np.abs(f))
     # plot averaged fft
