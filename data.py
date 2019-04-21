@@ -115,7 +115,7 @@ def plot_fft(signals, ax=None, title='', logscale=False, force_equal_sizes=True)
 
     for i, sig in enumerate(signals):
         signal = signals[sig][:n]
-        f = np.fft.fftr(signal, norm='ortho')[1:]
+        f = np.fft.rfft(signal, norm='ortho')[1:]
         if logscale:
             f = np.log10(1 + np.abs(f)) * np.sign(f)
         ax.plot(1+np.arange(len(f)), f, color=utils.DEF_COLORS[i],
@@ -188,7 +188,7 @@ def averaged_spectrum(df):
     ffts = []
     for ti,tf in zip(transitions[:-1],transitions[1:]):
         if tf-ti != 4096: continue
-        f = np.fft.fftr(df.signal[ti:tf], norm='ortho')[1:]
+        f = np.fft.rfft(df.signal[ti:tf], norm='ortho')[1:]
         ffts.append(np.abs(f))
     # plot averaged fft
     avg_fft = np.mean(ffts, axis=0)
