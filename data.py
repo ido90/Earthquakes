@@ -12,7 +12,9 @@ import utils
 from InteractivePlotter import InteractiveFigure
 
 def load_data(fname=r'Data/train.csv', nrows=None, skiprows=None):
-    df = pd.read_csv(fname, nrows=nrows, skiprows=skiprows)
+    df = pd.read_csv(fname, nrows=nrows, skiprows=skiprows,
+                     dtype={'acoustic_data': np.int16,
+                            'time_to_failure': np.float64})
     df.rename(columns={'acoustic_data': 'signal',
                        'time_to_failure': 'quaketime'},
               inplace=True)
