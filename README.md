@@ -3,7 +3,7 @@ This repo contains my humble part in the efforts of Kopeyka team (including Zaha
 
 My main task in the team concentrated on NN-based solutions, which did not prove very useful for the competition.
 
-While my work is surely far away from optimal, it is suspected that Neural Networks have lower success potential for the task (in particular, most public discussion in the competition concentrated on trees-based solutions).
+While my work is surely far away from optimal, it is suspected that Neural Networks have lower success potential for the task (in particular, most public discussion in the competition concentrated on trees-based solutions and dedicated feature-engineering).
 
 ### Competition
 Task: given a series of 150K seismic measurements, predict the time remaining until the next earthquake.
@@ -17,9 +17,9 @@ The data is based on an experiment in which small-scale earthquakes were generat
 
 <!--ts-->
 
-- [Spectrograms]: 
+- Spectrograms: [Generating](https://www.kaggle.com/idog90/lanl-competition-why-do-spectrograms-fail) spectrogram-images and [applying](https://github.com/ido90/Earthquakes/blob/master/Spectrogram/NN_spects.ipynb) the standard Resnet-34 Convolutional NN on them to predict next quake's time - using both regression and time-intervals-classification (the latter allowing later stacking strategies with probabilistic approach).
 
-- [Transformer network]: 
+- [Transformer networks](https://github.com/ido90/Earthquakes/blob/master/Transformer/transformer-simplified.ipynb): [Attention-based Neural Network](https://arxiv.org/abs/1706.03762), based on [this](https://www.kaggle.com/buchan/transformer-network-with-1d-cnn-feature-extraction) great public Kaggle kernel.
 
 - [Basic EDA](#very-basic-explanatory-data-analysis): some very basic figures of the data and its distribution.
 
