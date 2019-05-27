@@ -4,3 +4,5 @@ __pycache__/
 .ipynb_checkpoints/
 Notes/
 Data/
+Features Analysis/Earthquake 1.05.ipynb
+Features Analysis/train.covs.pickle
