@@ -23,6 +23,8 @@ The data is based on an experiment in which small-scale earthquakes were generat
 
 - [Basic EDA](#very-basic-explanatory-data-analysis): some very basic figures of the data and its distribution.
 
+- [Features EDA](https://github.com/ido90/Earthquakes/tree/master/Features%20Analysis): analysis of the models' predictions and of the features they use.
+
 - [Representation](#representation): basic research of the representation of the signal in Fourier space, with consideration of the signal samples not being exactly unifrom over time (also see [dedicated research of FFT with dropped samples](https://github.com/ido90/SignalReconstruction)).
 
 - [Features](#wavelets-features): brief discussion of basic wavelets features.
