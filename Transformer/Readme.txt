@@ -3,7 +3,6 @@ https://www.kaggle.com/buchan/transformer-network-with-1d-cnn-feature-extraction
 
 Notebooks:
 transformer-network: main notebook.
-transformer-simplified: clearer version of the main notebook.
 transformer-network_max_train: train one model over all data.
 
 others:
