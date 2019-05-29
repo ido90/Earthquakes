@@ -31,6 +31,10 @@ The data is based on an experiment in which small-scale earthquakes were generat
 
 <!--te-->
 
+### Best Leaderboard score :)
+![](https://github.com/ido90/Earthquakes/blob/master/Best%20Leaderboard%20Score.png)
+
+__________________________
 
 # Very Basic Explanatory Data Analysis
 
