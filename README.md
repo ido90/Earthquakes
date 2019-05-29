@@ -17,7 +17,7 @@ The data is based on an experiment in which small-scale earthquakes were generat
 
 <!--ts-->
 
-- **Spectrogram-based CNN**: [Generating](https://www.kaggle.com/idog90/lanl-competition-why-do-spectrograms-fail) spectrogram-images and [applying](https://github.com/ido90/Earthquakes/blob/master/Spectrogram/NN_spects.ipynb) the standard Resnet-34 Convolutional NN on them to predict next quake's time - using both regression and time-intervals-classification (the latter allowing later stacking strategies with probabilistic approach).
+- **Spectrogram-based CNN**: [generating](https://www.kaggle.com/idog90/lanl-competition-why-do-spectrograms-fail) spectrogram-images and [applying](https://github.com/ido90/Earthquakes/blob/master/Spectrogram/NN_spects.ipynb) the standard Resnet-34 Convolutional NN on them to predict next quake's time - using both regression and time-intervals-classification (the latter allowing later stacking strategies with probabilistic approach).
 
 - [**Transformer networks**](https://github.com/ido90/Earthquakes/blob/master/Transformer/transformer-network.ipynb): [Attention-based Neural Network](https://arxiv.org/abs/1706.03762), based on [this](https://www.kaggle.com/buchan/transformer-network-with-1d-cnn-feature-extraction) great public Kaggle kernel.
 
