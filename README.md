@@ -1,7 +1,7 @@
 # Summary
 This repo contains my humble part in the efforts of Kopeyka team (including Zahar Chikishev in full-time and myself in part-time) in Kaggle's [LANL Earthquake Prediction](https://www.kaggle.com/c/LANL-Earthquake-Prediction/overview) competition.
 
-My main task in the team concentrated on NN-based solutions, which did not prove very useful for the competition.
+My main task in the team concentrated on Neural-Network solutions based on raw-signal, which did not prove very useful for the competition.
 
 While my work is surely far away from optimal, it is suspected that Neural Networks have lower success potential for the task (in particular, most public discussion in the competition concentrated on trees-based solutions and dedicated feature-engineering).
 
