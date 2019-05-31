@@ -3,7 +3,7 @@ https://www.kaggle.com/buchan/transformer-network-with-1d-cnn-feature-extraction
 
 Notebooks:
 transformer-network: main notebook.
-transformer-network_max_train: train one model over all data (more train data, no validation).
+transformer-network_max_train: train one model over all data (more train data, no validation or early-stopping).
 
 others:
 Some variations of the original kernel, that were intended to diagnose the source of different between my variant of transformer and the original one.
