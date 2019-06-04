@@ -1,9 +1,9 @@
 # Summary
-This repo contains my humble part in the efforts of Kopeyka team (including Zahar Chikishev in full-time and myself in part-time) in Kaggle's [LANL Earthquake Prediction](https://www.kaggle.com/c/LANL-Earthquake-Prediction/overview) competition.
+This repo contains my humble part in the efforts of Kopeyka team (including Zahar Chikishev in full-time and myself in part-time) in **Kaggle's [LANL Earthquake Prediction](https://www.kaggle.com/c/LANL-Earthquake-Prediction/overview) competition**.
 
-Our team won a silver medal, reaching the 89th place among 4562 competitors who chased after competition prizes of 50K$.
+Our team won a **silver medal**, reaching the **89th place among 4562 competitors** who chased after competition prizes of 50K$.
 
-My main task in the team concentrated on Neural-Network solutions based directly on raw-signal (rather than on engineered features).
+My main task in the team concentrated on **Neural-Network solutions based directly on raw-signal** (rather than on engineered features).
 
 The Transformer Network in this repo achieved score which would have won a gold medal. Unfortunately, no evidence indicated the quality of this model until the end of the competition, thus we did not submit it as our final solution.
 
