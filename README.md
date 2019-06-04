@@ -1,9 +1,11 @@
 # Summary
 This repo contains my humble part in the efforts of Kopeyka team (including Zahar Chikishev in full-time and myself in part-time) in Kaggle's [LANL Earthquake Prediction](https://www.kaggle.com/c/LANL-Earthquake-Prediction/overview) competition.
 
-My main task in the team concentrated on Neural-Network solutions based on raw-signal (rather than on engineered features), which did not prove very useful for the competition.
+Our team won a silver medal, reaching the 89th place among 4562 competitors who chased after competition prizes of 50K$.
 
-While my work is surely far away from optimal, it is suspected that Neural Networks have lower success potential for the task (in particular, most public discussion in the competition concentrated on trees-based solutions and dedicated feature-engineering).
+My main task in the team concentrated on Neural-Network solutions based directly on raw-signal (rather than on engineered features).
+
+The Transformer Network in this repo achieved score which would have won a gold medal. Unfortunately, no evidence indicated the quality of this model until the end of the competition, thus we did not submit it as our final solution.
 
 ### Competition
 Task: given a series of 150K seismic measurements, predict the time remaining until the next earthquake.
@@ -21,6 +23,8 @@ The data is based on an experiment in which small-scale earthquakes were generat
 
 - [**Transformer networks**](https://github.com/ido90/Earthquakes/blob/master/Transformer/transformer-network.ipynb): [Attention-based Neural Network](https://arxiv.org/abs/1706.03762), based on [this](https://www.kaggle.com/buchan/transformer-network-with-1d-cnn-feature-extraction) great public Kaggle kernel.
 
+- [**Final model selection**](https://github.com/ido90/Earthquakes/blob/master/Features%20Analysis/final_models_analysis.ipynb): detailed analysis of the final candidate-models for submission.
+
 - [Basic EDA](#very-basic-explanatory-data-analysis): some very basic figures of the data and its distribution.
 
 - [Features EDA](https://github.com/ido90/Earthquakes/tree/master/Features%20Analysis): analysis of the models' predictions and of the features they use.
@@ -32,6 +36,7 @@ The data is based on an experiment in which small-scale earthquakes were generat
 <!--te-->
 
 ### Best Leaderboard score :)
+(corresponding to the public score which is not the competition's final score)
 ![](https://github.com/ido90/Earthquakes/blob/master/Best%20Leaderboard%20Score.png)
 
 __________________________
