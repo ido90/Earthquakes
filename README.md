@@ -1,7 +1,7 @@
 # Summary
 This repo contains my humble part in the efforts of Kopeyka team (including Zahar Chikishev in full-time and myself in part-time) in **Kaggle's [LANL Earthquake Prediction](https://www.kaggle.com/c/LANL-Earthquake-Prediction/overview) competition**.
 
-Our team won a **silver medal**, reaching the **89th place among 4562 competitors** who chased after competition prizes of 50K$.
+Our team won a **silver medal**, reaching the **87th place among 4562 competitors** who chased after competition prizes of 50K$.
 
 My main task in the team concentrated on **Neural-Network solutions based directly on raw-signal** (rather than on engineered features).
 
