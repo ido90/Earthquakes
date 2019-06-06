@@ -1,75 +1,31 @@
-# Summary
-This repo contains my humble part in the efforts of Kopeyka team (including Zahar Chikishev in full-time and myself in part-time) in **Kaggle's [LANL Earthquake Prediction](https://www.kaggle.com/c/LANL-Earthquake-Prediction/overview) competition**.
-
-Our team won a **silver medal**, reaching the **87th place among 4562 competitors** who chased after competition prizes of 50K$.
-
-My main task in the team concentrated on **Neural-Network solutions based directly on raw-signal** (rather than on engineered features).
-
-The Transformer Network in this repo achieved score which would have won a gold medal. Unfortunately, no evidence indicated the quality of this model until the end of the competition, thus we did not submit it as our final solution.
-
-### Competition
-Task: given a series of 150K seismic measurements, predict the time remaining until the next earthquake.
-
-Goal function is Mean Absolute Error of predictions.
-The train and test sets given in the competition correspond to several thousands of such 150K-long segments.
-
-The data is based on an experiment in which small-scale earthquakes were generated within a laboratory.
-
-### Repo contents
-
-<!--ts-->
-
-- **Spectrogram-based CNN**: [generating](https://www.kaggle.com/idog90/lanl-competition-why-do-spectrograms-fail) spectrogram-images and [applying](https://github.com/ido90/Earthquakes/blob/master/Spectrogram/NN_spects.ipynb) the standard Resnet-34 Convolutional NN on them to predict next quake's time - using both regression and time-intervals-classification (the latter allowing later stacking strategies with probabilistic approach).
-
-- [**Transformer networks**](https://github.com/ido90/Earthquakes/blob/master/Transformer/transformer-network.ipynb): [Attention-based Neural Network](https://arxiv.org/abs/1706.03762), based on [this](https://www.kaggle.com/buchan/transformer-network-with-1d-cnn-feature-extraction) great public Kaggle kernel.
-
-- [**Final model selection**](https://github.com/ido90/Earthquakes/blob/master/Features%20Analysis/final_models_analysis.ipynb): detailed analysis of the final candidate-models for submission.
-
-- [Basic EDA](#very-basic-explanatory-data-analysis): some very basic figures of the data and its distribution.
-
-- [Features EDA](https://github.com/ido90/Earthquakes/tree/master/Features%20Analysis): analysis of the models' predictions and of the features they use.
-
-- [Representation](#representation): basic research of the representation of the signal in Fourier space, with consideration of the signal samples not being exactly unifrom over time (also see [dedicated research of FFT with dropped samples](https://github.com/ido90/SignalReconstruction)).
-
-- [Features](#wavelets-features): brief discussion of basic wavelets features.
-
-<!--te-->
-
-### Best Leaderboard score :)
-(corresponding to the public score which is not the competition's final score)
-![](https://github.com/ido90/Earthquakes/blob/master/Best%20Leaderboard%20Score.png)
-
-__________________________
-
 # Very Basic Explanatory Data Analysis
 
 ### Signals
 It is quite a problem to load all the data naively using read_csv.
 Until this issue is handled, only ~10% of the data are actually used (~100M/1B samples).
 
-|![](https://github.com/ido90/Earthquakes/blob/master/Output/Signal%20description/train_100M_samples_low_resolution_interactive.png)|
+|![](https://github.com/ido90/Earthquakes/blob/master/Others/Output/Signal%20description/train_100M_samples_low_resolution_interactive.png)|
 |:--:|
 | Train set: first 100M samples (~10%) with skips (only 1 row in a 1000 is shown) |
 
-|![](https://github.com/ido90/Earthquakes/blob/master/Output/Signal%20description/train_10M_samples_interactive.png)|
+|![](https://github.com/ido90/Earthquakes/blob/master/Others/Output/Signal%20description/train_10M_samples_interactive.png)|
 |:--:|
 | Train set: first 10M samples (~1%) with no skips |
 
-|![](https://github.com/ido90/Earthquakes/blob/master/Output/Signal%20description/train_150K_samples_interactive.png)|
+|![](https://github.com/ido90/Earthquakes/blob/master/Others/Output/Signal%20description/train_150K_samples_interactive.png)|
 |:--:|
 | Train set: a random segment of 150K samples |
 
-|![](https://github.com/ido90/Earthquakes/blob/master/Output/Signal%20description/train_150K_samples_interactive_zoom_calm.png)|
+|![](https://github.com/ido90/Earthquakes/blob/master/Others/Output/Signal%20description/train_150K_samples_interactive_zoom_calm.png)|
 |:--:|
-|![](https://github.com/ido90/Earthquakes/blob/master/Output/Signal%20description/train_150K_samples_interactive_zoom_calm.png)|
 | Train set: zoom in |
 | Note: it does not seem trivial whether or not there is discontinuity in the transition between the 4096-sized chunks. |
 
-|![](https://github.com/ido90/Earthquakes/blob/master/Output/Signal%20description/test_10_segments.png)|
+|![](https://github.com/ido90/Earthquakes/blob/master/Others/Output/Signal%20description/test_10_segments.png)|
 |:--:|
 | Test set: 10 random segments (with adjacent indices) of 150K samples each |
 
-|![](https://github.com/ido90/Earthquakes/blob/master/Output/FFT/train_vs_test.png)|
+|![](https://github.com/ido90/Earthquakes/blob/master/Others/Output/FFT/train_vs_test.png)|
 |:--:|
 | FFT of samples of train set vs. test set |
 
@@ -81,11 +37,11 @@ It looks like the orders of magnitudes are similar over the distributions.
 Both distributions are within the range (-1)-(+9) for 80% of the time, yet reach +-6000 in their extremes (in which the test set reaches ~20% larger absolute values).
 The train signal is larger by 1 in median and by 0.4 in average.
 
-![](https://github.com/ido90/Earthquakes/blob/master/Output/Signal%20description/quantile_plots.png)
-![](https://github.com/ido90/Earthquakes/blob/master/Output/Signal%20description/quantile_plots_log.png)
+![](https://github.com/ido90/Earthquakes/blob/master/Others/Output/Signal%20description/quantile_plots.png)
+![](https://github.com/ido90/Earthquakes/blob/master/Others/Output/Signal%20description/quantile_plots_log.png)
 
-![](https://github.com/ido90/Earthquakes/blob/master/Output/Signal%20description/qqplot.png)
-![](https://github.com/ido90/Earthquakes/blob/master/Output/Signal%20description/qqplot_log.png)
+![](https://github.com/ido90/Earthquakes/blob/master/Others/Output/Signal%20description/qqplot.png)
+![](https://github.com/ido90/Earthquakes/blob/master/Others/Output/Signal%20description/qqplot_log.png)
 
 
 # Representation
@@ -106,7 +62,7 @@ In particular, the remaining gaps after the time correction either don't exist o
 Since we don't seem to successfully build a coherent time-grid, we will avoid any interpolations that would have allow us to apply FFT on a full uniform grid (as demonstrated [here](https://github.com/ido90/SignalReconstruction)).
 Instead, we will just apply FFT separately to every block of 4096 samples.
 
-|![](https://github.com/ido90/Earthquakes/blob/master/Output/FFT/time_correction.png)|
+|![](https://github.com/ido90/Earthquakes/blob/master/Others/Output/FFT/time_correction.png)|
 |:--:|
 | Corrected times and the corresponding signal |
 
@@ -114,11 +70,11 @@ Instead, we will just apply FFT separately to every block of 4096 samples.
 
 Since the data are given in sequences of 4096 uniform samples (up to few exceptions with 4095 sampels), the FFT can just be applied separately to each sequence, allowing to capture any frequency corresponding to period of 4096 samples or shorter.
 
-|![](https://github.com/ido90/Earthquakes/blob/master/Output/FFT/train_averaged_fft.png)|
+|![](https://github.com/ido90/Earthquakes/blob/master/Others/Output/FFT/train_averaged_fft.png)|
 |:--:|
 | An average of all the ~35 FFTs of length 4096 within a train segment of 150K smaples (up), and two arbitrary particular FFTs (down). |
 
-|![](https://github.com/ido90/Earthquakes/blob/master/Output/FFT/train_blocks_fft_are_similar.png)|
+|![](https://github.com/ido90/Earthquakes/blob/master/Others/Output/FFT/train_blocks_fft_are_similar.png)|
 |:--:|
 | Distribution of the peaks of the various blocks FFTs: the peak is at a constant frequency somewhere between 200-300 samples (up to reflection of the Fourier transform), in amplitude that varies uniformly within 10-60. |
 
